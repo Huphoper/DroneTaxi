@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static "css/styles.css" %}?1">
+    <meta http-equiv="Cache-Control" content="no-cache" >
+    <script src="{% static "js/jquery-3.1.1.min.js"  %}"></script>
+    <script src="{% static "js/jquery.maskedinput.min.js"  %}">  </script>
+</head>
+<body class="BodyProfile">
+    <div>
+        <a href="/profile"><img class="Logo" src="{% static "img/Logo.png" %}"></a>
+        <p class="LogoText">DRONE TAXI</p>
+
+    </div>
+    <a href="/login" class="links quit">Выйти</a>
+    <table class="linksblock">
+        <tr>
+            <td class="links" ><a href="/profile"> Мой профиль </a></td>
+        </tr>
+         {% if role == 'clt' %}
+        <tr>
+            <td class="links"><a href="/myorders"> Мои заказы</a></td>
+        </tr>
+        {% endif%}
+        {% if role == 'opr' %}
+        <tr>
+            <td class="links"><a href="/myorders"> Список заказов</a></td>
+        </tr>
+
+        <tr>
+            <td class="links"><a href="/droneslist"> Список дронов</a></td>
+        </tr>
+        {% endif%}
+
+        {% if role == 'adm' %}
+        <tr>
+            <td class="links"><a href="/userslist"> Упр. пользователями</a></td>
+        </tr>
+        <tr>
+            <td class="links"><a href="/droneslist"> Упр. транспортом </a></td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <div id="app1">
+        <div class="ProfileArea">
+            {% block profile %}
+            {% endblock %}
+        </div>
+    </div>
+
+<script>
+$('.phone_number').mask('+7(999)999-99-99');
+$('.year').mask('9999');
+</script>
+</body>
+
+</html>

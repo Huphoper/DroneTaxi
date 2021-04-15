@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Drone Taxi - Аутентификация</title>
+    <link rel="stylesheet" type="text/css" href="{% static "css/styles.css" %}">
+</head>
+<body class="BodyBackground" style="background-image: url('{% static "img/flying-taxi.jpg" %}')">
+    <div>
+        <a href="/profile"><img class="Logo" src="{% static "img/Logo.png" %}"></a>
+        <p class="LogoText">DRONE TAXI</p>
+    </div>
+    <div class="AuthForm">
+        <form class="Form" method="POST" id="authForm"> 
+            <p class="Authorized"> АВТОРИЗАЦИЯ </p>
+            {% csrf_token %}
+            <div class="FormGroup">
+                <label for="id_login">Логин</label>
+                <br>
+                <input type="text" name="login" required id="id_login" value="{{login}}">
+            </div>
+            <div class="FormGroup">
+                <label for="id_password">Пароль</label>
+                <br>
+                <input type="password" name="password" required id="id_password">
+            </div>
+
+            <br>
+            <div class="SaveAndEnter">
+                <input class="SaveUseraccount" name="remember" type="checkbox">
+                <p class="SaveUseraccountText">Запомнить</p>
+                <input class="EnterButton" type="submit" value="Войти">
+            </div>
+        </form>
+        <a href="{% url 'registration' %}"><button class="RegistrationButton LogPage" type="submit">Регистрация</button></a>
+    </div>
+    {% if error %}
+    <div class="ErrorBlock">
+        <p class="Message">Неверный логин или пароль</p>
+    </div>
+    {% endif %}
+</body>
+</html>

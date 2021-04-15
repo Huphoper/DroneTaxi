@@ -1,0 +1,128 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">Список заказов</p>
+            <div class="InformationArea">
+                {% if count != 0 %}
+            <table class="Table_dark">
+                <tr>
+                    <th  >Время заказа</th>
+
+
+                    <th >Пункт отправки</th>
+
+                    <th >Место прибытия</th>
+
+                    <th >Стоимость поездки (р.)</th>
+
+                    <th >Статус заказа</th>
+
+                    <th >Класс дрона</th>
+
+                    <th >Клиент</th>
+
+                    <th > Используемый дрон </th>
+                     {% if role != 'clt'%}
+                    <th > Обслуживающий оператор</th>
+                    {% endif %}
+                    <th> Изменить данные</th>
+                </tr>
+                {% else %}
+
+
+                        <p class="MyProfile">Похоже вы ещё не оформляли заказы. Если хотите оформить заказ нажмите на кнопку "Оформить заказ"</p>
+
+                {% endif %}
+                {% for orders in orders %}
+                <tr>
+                    <td class="" >{{ orders.order_time  }}</td>
+
+                    <td class="">{{ orders.departure_point }}</td>
+
+                    <td class="">{{ orders.arrival_place }}</td>
+
+                    <td class="">{{ orders.cost }}</td>
+
+                    <td class="">
+                    {% if orders.order_status == 'can' %} Отменен {% endif %}
+                        {% if orders.order_status == 'cls' %} Закрыт {% endif %}
+                        {% if orders.order_status == 'per' %} Исполняется {% endif %}
+                        {% if orders.order_status == 'act' %} Активен {% endif %}
+                    </td>
+
+                    <td class="">
+
+                        {% if orders.drone_class == 'eco' %} Эконом {% endif %}
+                        {% if orders.drone_class == 'bus' %} Бизнес {% endif %}
+                        {% if orders.drone_class == 'pre' %} Премиум {% endif %}
+                    </td>
+
+                    <td class="">{{ orders.client }}</td>
+
+                    <td class="">
+                        {% if orders.drone == None%}
+                        Ещё не назначен
+                        {% else %}
+                        {{ orders.drone }}
+                        {% endif %}
+                    </td>
+                    {% if role != 'clt'%}
+                    <td class="">
+                        {% if orders.operator == None%}
+                        Ещё не назначен
+                        {% else %}
+                        {{ orders.operator }}
+                        {% endif %}
+
+
+                    </td>
+                    {% endif %}
+                    <td class="">
+                        <form class="Form" method="POST" action="/orderedit/">
+                        {% csrf_token %}
+                            <input hidden name="orderid" value="{{ orders.id }}">
+                            {% if role == 'clt' and orders.order_status != 'per' %}
+                            <input class="EnterButton edit" value="Просмотр" type="submit">
+                            {% endif %}
+                            {% if role == 'clt' and orders.order_status == 'per' %}
+                            <input class="EnterButton editt" value="Закрыть" type="submit">
+                            {% endif %}
+                            {% if role == 'opr' and orders.order_status == 'cls' %}
+                            <input class="EnterButton edit" value="Просмотр" type="submit">
+                            {% elif role == 'opr' and orders.order_status != 'cls' and orders.order_status != 'can'%}
+                            <input class="EnterButton editt" value="Изменить" type="submit">
+                            {% endif %}
+                            {% if role == 'opr' and orders.order_status == 'can' %}
+                            <input class="EnterButton edit" value="Просмотр" type="submit">
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                 {% endfor %}
+            </table>
+                {% if role == 'clt'%}
+
+                <a class="EnterButton edit" href="/orderadd">
+
+                    <p> Оформить заказ</p>
+
+                    </a>{% endif%}
+
+
+
+             </div>
+<div class="pagination">
+    <span class="step-links pag">
+        {% if orders.has_previous %}
+        <a class="pagref" href="?page={{ orders.previous_page_number }}"> Предыдущая страница</a>
+        {% endif %}
+
+
+            <p class="pag">Страница {{ orders.number }} из {{ orders.paginator.num_pages }}</p>
+
+
+        {% if orders.has_next %}
+        <a class="pagref" href="?page={{ orders.next_page_number }}">Следующая страница</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

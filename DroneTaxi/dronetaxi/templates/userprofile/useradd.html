@@ -1,0 +1,74 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">Создание пользователя</p>
+            <div class="InformationArea">
+
+                <form class="Form" method="POST" >
+                    {% csrf_token %}
+                <table class="TableInformation" >
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Фамилия</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Email</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="lastname" value="{{lastname}}" required></td>
+                         <td  colspan="2"><input name="email" value="{{email}}" required></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Имя</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Телефон</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="firstname" value="{{firstname}}" required></td>
+                        <td  colspan="2"><input name="phone_number" class="phone_number" value="{{phone_number}}" ></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Отчество</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Пароль</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="patronymic" value="{{patronymic}}" ></td>
+                        <td  colspan="2"><input type="password" name="password" required value="{{password}}" ></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Подтвердить пароль</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Роль пользователя</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input type="password" name="confpassword" required value="{{confpassword}}"></td>
+
+                        <td  colspan="2">
+                            <span class="custom-dropdown big">
+                            <select name="user_role">
+                                <option >Администратор</option>
+                                <option >Клиент</option>
+                                <option>Оператор</option>
+                            </select>
+                            </span>
+
+                    </tr>
+                </table>
+                    <input hidden name="addval" value="addval">
+                <input class="Save" type="submit" value="Новый пользователь">
+                <a class="EnterButton edit"  href="/userslist"><p>Отмена</p></a>
+                </form>
+
+            </div>
+{% if mailerror or passerror or smallpass or notmail%}
+    <div class="ErrorBlock">
+        {% if passerror%}
+        <p class="Message">Пароли в полях должны совпадать</p>
+        {% endif %}
+        {% if mailerror%}
+        <p class="Message">Данная почта уже используется</p>
+        {% endif %}
+        {% if smallpass %}
+        <p class="Message">Пароль должен состоять не менее чем из восьми символов</p>
+        {% endif %}
+        {% if notmail %}
+        <p class="Message">Неверный формат почты</p>
+        {% endif %}
+
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">Создание дрона</p>
+            <div class="InformationArea">
+                <form class="Form" method="POST" >
+                    {% csrf_token %}
+                <table class="TableInformation" >
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Марка дрона</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Модель дрона</p></td>
+                    </tr>
+                    <tr>
+
+                        <td  colspan="2"><input required name="drone_brand" value="{{drone_brand}}"></td>
+                        <td  colspan="2"><input required name="drone_model" value="{{drone_model}}"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Год выпуска</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Регистрационный номер</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input required class="year" name="production_year"  value="{{production_year}}"></td>
+                        <td  colspan="2"><input required name="registration_number" value="{{registration_number}}"></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Дата регистрации</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Статус дрона</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="registration_date" required type="date" value="{{registration_date}}"></td>
+                        <td  colspan="2" class="ProfileTD">
+                            <p>Свободен</p>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Фото дрона</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Класс дрона</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input class="drone_image" name="drone_image" required type="file" accept="image/*,image/jpeg,image/png"></td>
+                        <td class="HeaderInf" colspan="2">
+                            <span class="custom-dropdown big">
+                        <select name="drone_class" required>
+                                <option >Эконом</option>
+                                <option >Бизнес</option>
+                                <option> Премиум</option>
+                            </select>
+                            </span>
+                        </td>
+                    </tr>
+
+                </table>
+                    <input hidden name="addval" value="addval">
+
+
+                <button class="Save">Сохранить</button>
+                <button class="EnterButton edit">Отмена</button>
+                </form>
+            </div>
+{% if tooold %}
+<div class="ErrorBlock">
+        <p class="Message">Год выпуска не должна быть меньше 2018 года</p>
+</div>
+{% endif %}
+{% if notdate %}
+<div class="ErrorBlock">
+        <p class="Message">Год указан неверно</p>
+</div>
+{% endif %}
+{% endblock %}

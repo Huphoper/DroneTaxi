@@ -1,0 +1,141 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">
+                {% if role == 'clt' %}
+                Просмотр заказа
+                {% else %}
+                Редактирование заказа
+                {% endif %}
+            </p>
+            <div class="InformationArea">
+                <form class="Form" method="POST" name="orderform">
+                    {% csrf_token %}
+                <table class="TableInformation" >
+                    {% for order in order%}
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Время заказа</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Точка отправления</p></td>
+                    </tr>
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>{{ order.order_time }}</p></td>
+                        <td class="ProfileTD" colspan="2"><p>{{ order.departure_point }}</p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Точка прибытия</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Стоимость заказа</p></td>
+                    </tr>
+                    <tr>
+                         <td class="ProfileTD" colspan="2"><p>{{ order.arrival_place }}</p></td>
+                        <td class="ProfileTD" colspan="2"><p>{{ order.cost }}</p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Статус заказа</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Класс дрона</p></td>
+                    </tr>
+                    <tr>
+                        {% if role == 'clt' and order.order_status == 'can' %}
+                        <td class="ProfileTD" colspan="2"><p>Отменен  </p></td>{% endif %}
+                                {% if role == 'clt' and order.order_status == 'cls' %}
+                        <td class="ProfileTD" colspan="2"><p>Закрыт </p></td>{% endif %}
+                                {% if role == 'clt' and order.order_status == 'per' %}
+                        <td class="ProfileTD" colspan="2"><p>Исполняется </p></td>{% endif %}
+                                {% if role == 'clt' and order.order_status == 'act' %}
+                        <td class="ProfileTD" colspan="2"><p>Активен </p></td>{% endif %}
+
+                        {% if role == 'opr' and order.order_status != 'cls' %}
+                        <td class="HeaderInf" colspan="2">
+                            <span class="custom-dropdown big">
+                            <select name="order_status" required>
+                                <option> Исполняется</option>
+                                <option >Активен</option>
+                                <option >Отменен</option>
+                                <option> Закрыт</option>
+
+                            </select>
+                            </span>
+                        </td>
+                            {% endif %}
+                        {% if role == 'opr' and order.order_status == 'cls' %}
+                        <td class="ProfileTD" colspan="2"><p>Закрыт </p></td>
+                        {% endif %}
+
+
+                        <td class="ProfileTD" colspan="2"><p>
+                        {% if order.drone_class == 'eco' %} Эконом {% endif %}
+                        {% if order.drone_class == 'bus' %} Бизнес {% endif %}
+                        {% if order.drone_class == 'pre' %} Премиум {% endif %}
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Клиент</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Обслуживающий дрон</p></td>
+                    </tr>
+
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>{{ order.client }}</p></td>
+                        {% if order.drone == None and role == 'opr' %}
+                        <td  colspan="2">
+                            <span class="custom-dropdown big">
+                            <select name="drone">
+                                {% for freedrones in freedrones %}
+                                <option value="{{ freedrones.id }}">{{ freedrones.drone_brand }} {{ freedrones.drone_model }}</option>
+                                {% endfor %}
+
+                        </select>
+                            </span>
+                        </td>
+                        {% endif %}
+                        {% if order.drone != None and role == 'opr' %}
+                        <td class="ProfileTD" colspan="2"><p>{{ order.drone }}</p></td>
+                        {% endif %}
+                        {% if order.drone == None and role == 'clt' %}
+                        <td class="ProfileTD" colspan="2"><p>Не назначен</p></td>
+                        {% endif %}
+                        {% if order.drone != None and role == 'clt' %}
+                        <td class="ProfileTD" colspan="2"><p>{{ order.drone }}</p></td>
+
+                        {% endif %}
+                    </tr>
+                    {% if role == 'opr' and  order.operator == None %}
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Обслуживающий оператор</p></td>
+                    </tr>
+
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p> Не назначен  </p></td>
+                    </tr>
+                    {% endif %}
+                    {% if role == 'opr' and  order.operator != None %}
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Обслуживающий оператор</p></td>
+                    </tr>
+
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>  {{ order.operator }} </p></td>
+                    </tr>
+                    {% endif %}
+                </table>
+
+                    <input hidden name="addval" value="addval">
+                    <input hidden name="orderid" value="{{ order.id }}">
+
+                    {% if role == 'clt' and order.order_status == 'per' %}
+                    <input hidden name="order_status" value="cls">
+                    <input class="Save" type="submit" value="Закрыть заказ">
+                    {% endif %}
+
+                    {% if role == 'clt' %}
+                    <a class="EnterButton edit" href="/myorders"><p>Закрыть</p></a>
+                    {% endif%}
+                {% if role == 'opr' and order.order_status != 'cls' %}
+                <input class="Save" type="submit" value="Сохранить">
+                <a class="EnterButton edit" href="/myorders"><p> Отмена </p></a>
+                {% endif %}
+                    {% if role == 'opr' and order.order_status == 'cls' %}
+                    <a class="EnterButton edit" href="/myorders"><p> Закрыть </p></a>
+                    {% endif %}
+                    {% endfor %}
+                    </form>
+            </div>
+
+{% endblock %}

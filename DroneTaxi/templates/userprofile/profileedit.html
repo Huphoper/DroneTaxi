@@ -1,0 +1,78 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">Редактирование профиля</p>
+            <div class="InformationArea">
+
+                <form class="Form" method="POST" >
+                    {% csrf_token %}
+                <table class="TableInformation" >
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Фамилия</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Email</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="lastname" value="{{ user.lastname }}" required></td>
+                         <td class="ProfileTD" colspan="2"><p>{{ user.email }}</p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Имя</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Телефон</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="firstname" value="{{ user.firstname }}" required></td>
+                        <td  colspan="2"><input id="phone_number" class="phone_number" name="phone_number" value="{{ user.phone_number }}" ></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Отчество</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Пароль</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="patronymic" value="{{ user.patronymic }}" ></td>
+                        <td  colspan="2"><input type="password"  name="password" required value="" ></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Подтвердить пароль</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Роль пользователя</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input type="password" required name="confpassword" value=""></td>
+                        {% if role == 'adm' and user.user_role != 'adm' %}
+                        <td  colspan="2">
+                            <span class="custom-dropdown big">
+                            <select name="user_role">
+
+                                <option >Клиент</option>
+                                <option >Администратор</option>
+                                <option>Оператор</option>
+                            </select>
+                            </span>
+                            </td>
+                            {% else %}
+                            <td class="ProfileTD" colspan="2"><p>{% if user.user_role == 'adm'%}Администратор{% endif%}
+                        {% if user.user_role == 'clt'%}Клиент{% endif%}
+                        {% if user.user_role == 'opr'%}Оператор{% endif%}</p>
+                            <input hidden name="user_role" value="{{ user.user_role }}">
+                            </td>
+                            {% endif %}
+                    </tr>
+
+                </table>
+                    <input class="Save " type="submit" value="Сохранить">
+                <a class="EnterButton edit" href="/userslist"> <p>Отмена</p></a>
+                    <input hidden name="userid" value="{{ user.email }}">
+                    <input hidden name="addval" value="addval">
+
+                </form>
+
+            </div>
+{% if passerror%}
+<div class="ErrorBlock">
+        <p class="Message">Пароли в полях должны совпадать</p>
+</div>
+{% endif %}
+{% if smallpass %}
+<div class="ErrorBlock">
+        <p class="Message">Пароль должен состоять не менее чем из восьми символов</p>
+</div>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Drone Taxi - Регистрация</title>
+    <link rel="stylesheet" type="text/css" href="{% static "css/styles.css" %}">
+</head>
+<body class="BodyBackground" style="background-image: url('{% static "img/flying-taxi.jpg" %}')">
+    <div>
+        <a href="/profile"><img class="Logo" src="{% static "img/Logo.png" %}"></a>
+        <p class="LogoText">DRONE TAXI</p>
+    </div>
+    <header id="app">
+        <form class="Form" method="POST">
+            {% csrf_token %}
+        <table class="UserTable">
+            <tr> 
+                <td class="UserTD"><p class="HeaderReg">Регистрация</p></td>
+            </tr>
+            <tr> 
+                <td class="UserTD"><p class="Header">Фамилия *</p><input value="{{lastname}}" name="lastname" required></td>
+            </tr>
+            <tr>
+                <td class="UserTD"><p class="Header">Имя *</p><input value="{{firstname}}" name="firstname"required></td>
+            </tr>
+            <tr> 
+                <td class="UserTD"><p class="Header">Отчество </p><input value="{{patronymic}}" name="patronymic"></td>
+            </tr>
+            <tr>
+                <td class="UserTD"><p class="Header">Email *</p><input name="email" value="{{email}}" required></td>
+            </tr>
+            <tr> 
+                <td class="UserTD"><p class="Header">Пароль *</p><input name="password" type="password" value="{{password}}" required></td>
+            </tr>
+            <tr>
+                <td class="UserTD"><p class="Header">Подтвердить пароль *</p><input name="confpassword" type="password" value="{{confpassword}}" required></td>
+            </tr>
+            <tr>
+                <td><input type="submit" class="RegistrationButton" value="Регистрация"></td>
+            </tr>
+        </table>
+        </form>
+    </header>
+    {% if mailerror or passerror or notmail or smallpass %}
+    <div class="ErrorBlock">
+        {% if passerror%}
+        <p class="Message">Пароли в полях должны совпадать</p>
+        {% endif %}
+        {% if mailerror%}
+        <p class="Message">Данная почта уже используется</p>
+        {% endif %}
+        {% if notmail%}
+        <p class="Message">Неверно задан формат почты</p>
+        {% endif %}
+        {% if smallpass %}
+        <p class="Message">Пароль должен состоять не менее из восьми символов</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+             {% extends 'main/main.html' %}
+            {% block profile %}
+            <p class="MyProfile">Мой профиль</p>
+            <div class="InformationArea">
+                <table class="TableInformation" >
+
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Фамилия</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Email</p></td>
+                    </tr>
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>{{ user.lastname }}</p></td>
+                        <td class="ProfileTD" colspan="2"><p>{{ user.email }}</p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Имя</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Телефон</p></td>
+                    </tr>
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>{{ user.firstname }}</p></td>
+                        <td class="ProfileTD" colspan="2"><p>{{ user.phone_number }}</p></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Отчество</p></td>
+
+                    </tr>
+                    <tr>
+                        <td class="ProfileTD" colspan="2"><p>{{ user.patronymic }}</p></td>
+                        <td><a class="EnterButton edit" href="/editprofile"><p>Редактировать</p></a> </td>
+                    </tr>
+
+                </table>
+            </div>
+
+     {% endblock %}

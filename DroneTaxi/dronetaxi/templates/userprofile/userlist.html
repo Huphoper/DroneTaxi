@@ -1,0 +1,74 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+             <p class="MyProfile">Список пользователей</p>
+            <div class="InformationArea">
+            <table class="Table_dark">
+                <tr>
+                    <th  >Почта пользователя</th>
+
+
+                    <th >Фамилия</th>
+
+                    <th >Имя</th>
+
+                    <th >Отчество</th>
+
+                    <th >Номер телефона</th>
+
+                    <th >Роль пользователя</th>
+
+                    <th >Редактировать пользователя</th>
+
+                </tr>
+                {% for users in users %}
+                <tr>
+                    <td class="" >{{ users.email  }}</td>
+
+                    <td class="">{{ users.lastname }}</td>
+
+                    <td class="">{{ users.firstname }}</td>
+
+                    <td class="">{{ users.patronymic }}</td>
+
+                    <td class="">{{ users.phone_number }}</td>
+
+                    <td class="">
+                        {% if users.user_role == 'adm'%}
+                            Администратор
+                        {% endif%}
+                        {% if users.user_role == 'clt'%} Клиент{% endif%}
+                        {% if users.user_role == 'opr'%} Оператор{% endif%}</td>
+
+                    <td class="">
+                        <form class="Form" method="POST" action="/editprofile/">
+                        {% csrf_token %}
+                            <input hidden name="userid" value="{{ users.email }}">
+                            <input class="EnterButton edit" value="Редактировать" type="submit">
+                        </form>
+                    </td>
+                </tr>
+                 {% endfor %}
+
+
+            </table>
+                <a class="EnterButton edit" href="/useradd"> <p> Добавить пользователя </p></a>
+
+
+            </div>
+
+<div class="pagination">
+    <span class="step-links pag">
+        {% if users.has_previous %}
+        <a class="pagref" href="?page={{ users.previous_page_number }}"> Предыдущая страница</a>
+        {% endif %}
+
+
+            <p class="pag">Страница {{ users.number }} из {{ users.paginator.num_pages }}</p>
+
+
+        {% if users.has_next %}
+        <a class="pagref" href="?page={{ users.next_page_number }}">Следующая страница</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

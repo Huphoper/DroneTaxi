@@ -1,0 +1,85 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+
+
+
+
+             <p class="MyProfile">Список дронов</p>
+            <div class="InformationArea">
+            <table class="Table_dark">
+                <tr>
+                    <th >Марка дрона</th>
+
+
+                    <th >Модель дрона</th>
+
+                    <th >Год выпуска</th>
+
+                    <th >Регистрационный номер</th>
+
+                    <th >Дата регистрации</th>
+
+                    <th >Статус дрона</th>
+                    <th>Изображение дрона </th>
+                    <th >Класс дрона</th>
+                    {% if role == 'adm' %}
+                    <th> Изменить данные</th>
+                    {% endif %}
+                </tr>
+                {% for drones in drones %}
+                <tr>
+                    <td class="" >{{ drones.drone_brand  }}</td>
+
+
+                    <td class="">{{ drones.drone_model }}</td>
+
+                    <td class="">{{ drones.production_year }}</td>
+
+                    <td class="">{{ drones.registration_number }}</td>
+
+                    <td class="">{{ drones.registration_date }}</td>
+
+                    <td class="">{% if drones.drone_status == 'bsy' %} Занят {% endif %}
+                        {% if drones.drone_status == 'fre' %} Свободен {% endif %}
+                    </td>
+                    <td class=""><img width="100px" height="100px" src="/static/image/{{ drones.drone_image }}" alt="Картинка транспорта"></td>
+                    <td class="">
+                        {% if drones.drone_class == 'eco' %} Эконом {% endif %}
+                        {% if drones.drone_class == 'bus' %} Бизнес {% endif %}
+                        {% if drones.drone_class == 'pre' %} Премиум {% endif %}
+
+                    </td>
+                    {% if role == 'adm' %}
+                    <td class="">
+                        <form class="Form" method="POST" action="/droneedit/">
+                        {% csrf_token %}
+                            <input hidden name="droneid" value="{{ drones.id }}">
+                            <input class="EnterButton edit" value="Редактировать" type="submit">
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                 {% endfor %}
+            </table>
+                {% if role == 'adm' %}
+                <a class="EnterButton edit" href="/droneadd" > <p> Добавить дрона </p></a>
+                {% endif%}
+
+            </div>
+<div class="pagination">
+    <span class="step-links pag">
+        {% if drones.has_previous %}
+        <a class="pagref" href="?page={{ drones.previous_page_number }}"> Предыдущая страница</a>
+        {% endif %}
+
+
+            <p class="pag">Страница {{ drones.number }} из {{ drones.paginator.num_pages }}</p>
+
+
+        {% if drones.has_next %}
+        <a class="pagref" href="?page={{ drones.next_page_number }}">Следующая страница</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

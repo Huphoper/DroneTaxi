@@ -1,0 +1,70 @@
+{% extends 'main/main.html' %}
+            {% block profile %}
+
+
+
+            <p class="MyProfile">Оформление заказа</p>
+            <div class="InformationArea">
+                <form class="Form" method="POST" >
+                    {% csrf_token %}
+                <table class="TableInformation" >
+
+                    <tr>
+                        <td class="HeaderInf" colspan="2"><p>Время заказа</p></td>
+                        <td class="HeaderInf" colspan="2"><p>Точка отправления</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input type="datetime-local" required name="order_time"></td>
+                        <td  colspan="2"><input name="departure_point" required value="{{departure_point}}"></td>
+                    </tr>
+                    <tr>
+                        <td class="HeaderInf" colspan="2" ><p>Точка прибытия</p></td>
+                        <td class="HeaderInf" colspan="2" required><p>Класс дрона</p></td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><input name="arrival_place" required value="{{arrival_place}}"></td>
+                        <td class="HeaderInf" colspan="2">
+                            <span class="custom-dropdown big">
+                        <select name="drone_class"  class="drone_class" id="drone_class" required>
+                                <option >Эконом</option>
+                                <option >Бизнес</option>
+                                <option>Премиум</option>
+                            </select>
+                            </span>
+                        </td>
+                    </tr><tr>
+                    <td class="HeaderInf" colspan="2"><p>Стоимость заказа</p></td>
+                    </tr>
+                    <tr>
+                        <td class="ProfileTD" colspan="2" ><p class="cost">500</p></td>
+                    </tr>
+                </table>
+                <input class="Save" type="submit" value="Оформить заказ">
+                <a class="EnterButton edit" href="/myorders"><p>Назад</p></a>
+                    <input hidden name="addval" value="addval">
+                    <input hidden name="client" value="{{email}}">
+                    </form>
+            </div>
+<script>
+
+$(".drone_class").change(function() {
+ if ($(".drone_class option:selected").text() == "Эконом"){
+ $( ".cost" ).text(500);
+ }
+ if ($(".drone_class option:selected").text() == "Бизнес"){
+ $( ".cost" ).text(1000);
+ }
+ if ($(".drone_class option:selected").text() == "Премиум"){
+ $( ".cost" ).text(1500);
+ }
+
+});
+
+
+</script>
+{% if dataerror%}
+<div class="ErrorBlock">
+        <p class="Message">Дата должна быть не меньше текущей</p>
+</div>
+{% endif %}
+{% endblock %}
